@@ -3,19 +3,46 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-// Tray
-#if defined (__linux__) || defined (linux) || defined (__linux)
-#define TRAY_APPINDICATOR 1
-
 #include <stdio.h>
 #include <string.h>
-#include <tray/tray_linux.c>
+
+// Tray
+#if defined (_WIN32) || defined (_WIN64)
+#define TRAY_WINAPI 1
+#elif defined (__linux__) || defined (linux) || defined (__linux)
+#define TRAY_APPINDICATOR 1
+#elif defined (__APPLE__) || defined (__MACH__)
+#define TRAY_APPKIT 1
+#endif
+
+#include "tray/tray_linux.c"
 
 #if TRAY_APPINDICATOR
 #define TRAY_ICON1 "indicator-messages"
 #define TRAY_ICON2 "indicator-messages-new"
+#elif TRAY_APPKIT
+#define TRAY_ICON1 "icon.png"
+#define TRAY_ICON2 "icon.png"
+#elif TRAY_WINAPI
+#define TRAY_ICON1 "icon.ico"
+#define TRAY_ICON2 "icon.ico"
+#endif
 
+static struct tray tray;
+static void quit_cb(struct tray_menu *item) {
+    (void)item;
+    printf("Exited Crosshair");
+    g_application_quit(G_APPLICATION(g_application_get_default()));
+    tray_exit();
+}
+
+static struct tray tray = {
+    .icon = TRAY_ICON1,
+    .menu =
+        (struct tray_menu[]) {
+            {.text = "Quit", .cb = quit_cb},
+            {.text = NULL}},
+};
 
 double height = 0.5;
 double width = 0.5;
@@ -35,6 +62,8 @@ static gboolean on_draw(GtkWidget *w, cairo_t *cr, gpointer _) {
     cairo_set_source_rgb(cr, r, g, b);
     cairo_arc(cr, a.width * width, a.height * (1.0 - height), radius, 0, 2 * G_PI);
     cairo_fill(cr);
+
+
     return FALSE;
 }
 
@@ -68,6 +97,11 @@ static void activate(GtkApplication *app, gpointer _) {
     cairo_region_t *empty = cairo_region_create();
     gdk_window_input_shape_combine_region(gtk_widget_get_window(win), empty, 0, 0);
     cairo_region_destroy(empty);
+
+    if (tray_init(&tray) < 0) {
+	printf("failed to create tray\n");
+	return;
+    }
 }
 
 int main(int argc, char *argv[]) {
