@@ -6,22 +6,6 @@
 
 #define RADIUS 3.0
 
-static pid_t wlsunset_pid = -1;
-
-static void kill_wlsunset(void) {
-    if (wlsunset_pid > 0)
-        kill(wlsunset_pid, SIGTERM);
-}
-
-static void spawn_wlsunset(const char *gamma) {
-    wlsunset_pid = fork();
-    if (wlsunset_pid == 0) {
-        execlp("wlsunset", "wlsunset", "-T", "6501", "-t", "6500", "-g", gamma, NULL);
-        _exit(1);
-    }
-    atexit(kill_wlsunset);
-}
-
 static gboolean on_draw(GtkWidget *w, cairo_t *cr, gpointer _) {
     (void)_;
     GtkAllocation a;
@@ -68,9 +52,6 @@ static void activate(GtkApplication *app, gpointer _) {
 }
 
 int main(int argc, char **argv) {
-    const char *gamma = (argc >= 2) ? argv[1] : "1.2";
-    spawn_wlsunset(gamma);
-
     GtkApplication *app = gtk_application_new("se.n1k0.crosshair", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
     int status = g_application_run(G_APPLICATION(app), 0, NULL);
