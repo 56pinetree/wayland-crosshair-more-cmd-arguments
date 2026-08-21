@@ -61,9 +61,9 @@ int main(int argc, char *argv[]) {
     bool printHelp = false;
     for(int i = 0; i < argc; i++) {
 	if(argv[i][0] == 'x') continue;
-	else if(argv[i][0] == '-') {
-	    break;
+	else if(argv[1][0] == '-') {
 	    printHelp = true;
+	    break;
 	}
 
 	switch(i) {
