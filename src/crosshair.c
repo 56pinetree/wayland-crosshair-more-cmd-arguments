@@ -57,43 +57,42 @@ static void activate(GtkApplication *app, gpointer _) {
     cairo_region_destroy(empty);
 }
 
-int main(int argc, char *argv[]) {
-    bool printHelp = false;
-    for(int i = 0; i < argc; i++) {
-	if(argv[i][0] == 'x') continue;
-	else if(argv[1][0] == '-') {
-	    printHelp = true;
+void set_value(int index, double value) {
+    switch(index) {
+	case 1:
+	    height = value;
 	    break;
-	}
+	case 2:
+	    width = value;
+	    break;
+	case 3:
+	    radius = value;
+	    break;
+	case 4:
+	    r = value;
+	    break;
+	case 5:
+	    g = value;
+	    break;
+	case 6:
+	    b = value;
+	    break;
+    }
+}
 
-	switch(i) {
-	    case 1:
-		height = atof(argv[i]);
-		break;
-	    case 2:
-		width = atof(argv[i]);
-		break;
-	    case 3:
-		radius = atof(argv[i]);
-		break;
-	    case 4:
-		r = atof(argv[i]);
-		break;
-	    case 5:
-		g = atof(argv[i]);
-		break;
-	    case 6:
-		b = atof(argv[i]);
-		break;
-	}
+int main(int argc, char *argv[]) {
+    if(argc == 2 && argv[1][0] == '-') {
+        printf("usage: crosshair [height] [width] [radius] [r] [g] [b]\n");
+        printf("example: crosshair 0.5, 0.5, 2.0, 0.0, 0.6, 0.9\n");
+        printf("\nNote: all arguments must be between 0.0 and 1.0\n");
+        return 0;
     }
 
-    if(printHelp)
-    {
-	printf("usage: crosshair [height] [width] [radius] [r] [g] [b]\n");
-	printf("example: crosshair 0.5, 0.5, 2.0, 0.0, 0.6, 0.9\n");
-	printf("\nNote: all arguments must be between 0.0 and 1.0\n");
-	return 0;
+    if(argc > 1) {
+        for(int i = 0; i < argc; i++) {
+            if(argv[i][0] == 'x') continue;
+            set_value(i, atof(argv[i]));
+        }
     }
 
     GtkApplication *app = gtk_application_new("se.n1k0.crosshair", G_APPLICATION_DEFAULT_FLAGS);
