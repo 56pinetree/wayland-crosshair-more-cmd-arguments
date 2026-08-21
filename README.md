@@ -10,6 +10,7 @@ Displays a small green dot at the exact center of your screen as a fullscreen tr
 - `wlr-layer-shell` overlay layer — renders above fullscreen games on Wayland
 - True screen center — anchors to all four edges so the dot is always at exact pixel center regardless of resolution
 - Negligible resource usage — static surface, redrawn once at startup
+- System tray entry to close the program (via https://github.com/nschmidtdev/c_tray)
 
 ## Dependencies
 
@@ -19,13 +20,13 @@ Displays a small green dot at the exact center of your screen as a fullscreen tr
 Install on Arch Linux:
 
 ```bash
-sudo pacman -S gtk3 gtk-layer-shell
+sudo pacman -S gtk3 gtk-layer-shell (whatever libappindicator3 is on arch)
 ```
 
 Install on Fedora:
 
 ```bash
-sudo dnf install gtk3-devel gtk-layer-shell-devel
+sudo dnf install gtk3-devel gtk-layer-shell-devel libappindicator-gtk3-devel
 ```
 
 ## Build
@@ -59,6 +60,8 @@ Kill it with:
 ```bash
 pkill crosshair
 ```
+
+Or right click the entry on the system tray and quit.
 
 ## Why not a Python/Electron/etc. script?
 
