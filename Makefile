@@ -4,7 +4,7 @@ CFLAGS = $(shell pkg-config --cflags $(PKGS)) -O2 -Wall -Wextra
 LIBS   = $(shell pkg-config --libs $(PKGS))
 
 crosshair: src/crosshair.c
-	$(CC) -o out src/crosshair.c $(CFLAGS) $(LIBS)
+	$(CC) -o crosshair src/crosshair.c $(CFLAGS) $(LIBS)
 
 clean:
 	rm -f out
