@@ -3,6 +3,10 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
+// Tray
+#include <stdio.h>
+#include <string.h>
+#include <tray/tray_linux.c>
 
 double height = 0.5;
 double width = 0.5;
