@@ -3,10 +3,19 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
+
 // Tray
+#if defined (__linux__) || defined (linux) || defined (__linux)
+#define TRAY_APPINDICATOR 1
+
 #include <stdio.h>
 #include <string.h>
 #include <tray/tray_linux.c>
+
+#if TRAY_APPINDICATOR
+#define TRAY_ICON1 "indicator-messages"
+#define TRAY_ICON2 "indicator-messages-new"
+
 
 double height = 0.5;
 double width = 0.5;
