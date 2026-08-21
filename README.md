@@ -4,28 +4,28 @@ A minimal crosshair overlay for Wayland compositors (Hyprland, Sway, etc.).
 
 Displays a small green dot at the exact center of your screen as a fullscreen transparent overlay. Designed for gaming — it is completely invisible to the input system: no focus, no keyboard grabs, no mouse interception. Clicks and cursor movement pass straight through to the game underneath.
 
-Optionally launches `wlsunset` alongside it for a gamma boost, killing it automatically on exit.
-
 ## Features
 
 - Zero input interference — uses an empty Wayland input region so the overlay cannot be focused or clicked
 - `wlr-layer-shell` overlay layer — renders above fullscreen games on Wayland
 - True screen center — anchors to all four edges so the dot is always at exact pixel center regardless of resolution
-- Optional gamma boost via `wlsunset` — starts and stops with the crosshair
 - Negligible resource usage — static surface, redrawn once at startup
 
 ## Dependencies
 
 - `gtk3`
 - `gtk-layer-shell`
-- `wlsunset` *(optional, for gamma boost)*
 
 Install on Arch Linux:
 
 ```bash
 sudo pacman -S gtk3 gtk-layer-shell
-# optional
-sudo pacman -S wlsunset
+```
+
+Install on Fedora:
+
+```bash
+sudo dnf install gtk3-devel gtk-layer-shell-devel
 ```
 
 ## Build
@@ -40,13 +40,20 @@ make
 # Crosshair only
 ./crosshair
 
-# Crosshair + gamma boost (value is passed to wlsunset -g)
-./crosshair 1.2   # subtle
-./crosshair 1.3   # moderate
-./crosshair 1.5   # strong
+# Help
+./crosshair -h/help
+
+# Crosshair with custom position, radius, and color
+./crosshair [height], [width], [radius], [red], [green], [blue]
+./crosshair 0.5, 0.5, 2.0, 0.0, 0.6, 0.9
+
+# Currently every argument needs to be passed in order,
+# But you can put an 'x' in place of a value to keep default.
+# To just change the color:
+./crosshair x, x, x, 0.0, 0.6, 0.9
 ```
 
-Kill it (and wlsunset) with:
+Kill it with:
 
 ```bash
 pkill crosshair
