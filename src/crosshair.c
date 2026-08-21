@@ -4,7 +4,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define RADIUS 3.0
+double height = 0.5;
+double width = 0.5;
+double radius = 2.0;
+// Blue for initial color
+double r = 0.0;
+double g = 0.6;
+double b = 0.9;
 
 static gboolean on_draw(GtkWidget *w, cairo_t *cr, gpointer _) {
     (void)_;
@@ -13,8 +19,8 @@ static gboolean on_draw(GtkWidget *w, cairo_t *cr, gpointer _) {
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
     cairo_set_source_rgba(cr, 0, 0, 0, 0);
     cairo_paint(cr);
-    cairo_set_source_rgb(cr, 0, 1, 0);
-    cairo_arc(cr, a.width / 2.0, a.height / 2.0, RADIUS, 0, 2 * G_PI);
+    cairo_set_source_rgb(cr, r, g, b);
+    cairo_arc(cr, a.width * width, a.height * (1.0 - height), radius, 0, 2 * G_PI);
     cairo_fill(cr);
     return FALSE;
 }
@@ -37,7 +43,7 @@ static void activate(GtkApplication *app, gpointer _) {
     gtk_layer_set_anchor(GTK_WINDOW(win), GTK_LAYER_SHELL_EDGE_RIGHT,  TRUE);
     gtk_layer_set_anchor(GTK_WINDOW(win), GTK_LAYER_SHELL_EDGE_TOP,    TRUE);
     gtk_layer_set_anchor(GTK_WINDOW(win), GTK_LAYER_SHELL_EDGE_BOTTOM, TRUE);
-    /* -1 = ignore exclusive zones from bars/docks, use full screen dimensions */
+    /* -1 = ignore exclusive zones from bars/docksla, use full screen dimensions */
     gtk_layer_set_exclusive_zone(GTK_WINDOW(win), -1);
 
     GtkWidget *da = gtk_drawing_area_new();
@@ -51,7 +57,45 @@ static void activate(GtkApplication *app, gpointer _) {
     cairo_region_destroy(empty);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char *argv[]) {
+    bool printHelp = false;
+    for(int i = 0; i < argc; i++) {
+	if(argv[i][0] == 'x') continue;
+	else if(argv[i][0] == '-') {
+	    break;
+	    printHelp = true;
+	}
+
+	switch(i) {
+	    case 1:
+		height = atof(argv[i]);
+		break;
+	    case 2:
+		width = atof(argv[i]);
+		break;
+	    case 3:
+		radius = atof(argv[i]);
+		break;
+	    case 4:
+		r = atof(argv[i]);
+		break;
+	    case 5:
+		g = atof(argv[i]);
+		break;
+	    case 6:
+		b = atof(argv[i]);
+		break;
+	}
+    }
+
+    if(printHelp)
+    {
+	printf("usage: crosshair [height] [width] [radius] [r] [g] [b]\n");
+	printf("example: crosshair 0.5, 0.5, 2.0, 0.0, 0.6, 0.9\n");
+	printf("\nNote: all arguments must be between 0.0 and 1.0\n");
+	return 0;
+    }
+
     GtkApplication *app = gtk_application_new("se.n1k0.crosshair", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
     int status = g_application_run(G_APPLICATION(app), 0, NULL);
