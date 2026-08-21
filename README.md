@@ -44,6 +44,7 @@ make
 ./crosshair -h/-help
 
 # Crosshair with custom position, radius, and color
+# (All values must be between 0.0 and 1.0)
 ./crosshair [height], [width], [radius], [red], [green], [blue]
 ./crosshair 0.5, 0.5, 2.0, 0.0, 0.6, 0.9
 
