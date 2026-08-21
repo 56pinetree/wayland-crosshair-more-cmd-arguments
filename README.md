@@ -11,6 +11,7 @@ Displays a small green dot at the exact center of your screen as a fullscreen tr
 - True screen center — anchors to all four edges so the dot is always at exact pixel center regardless of resolution
 - Negligible resource usage — static surface, redrawn once at startup
 - System tray entry to close the program (via https://github.com/nschmidtdev/c_tray)
+(Icon currently does not show)
 
 ## Dependencies
 
