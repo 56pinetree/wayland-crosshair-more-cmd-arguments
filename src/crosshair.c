@@ -18,7 +18,7 @@
 #include "tray/tray_linux.c"
 
 #if TRAY_APPINDICATOR
-#define TRAY_ICON1 "indicator-messages"
+#define TRAY_ICON1 "indicator-messages-new"
 #define TRAY_ICON2 "indicator-messages-new"
 #elif TRAY_APPKIT
 #define TRAY_ICON1 "icon.png"
@@ -31,9 +31,7 @@
 static struct tray tray;
 static void quit_cb(struct tray_menu *item) {
     (void)item;
-    printf("Exited Crosshair");
     g_application_quit(G_APPLICATION(g_application_get_default()));
-    tray_exit();
 }
 
 static struct tray tray = {
