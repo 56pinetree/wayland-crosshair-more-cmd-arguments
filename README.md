@@ -1,8 +1,9 @@
 # wayland-crosshair
+(fork of: https://github.com/Divvv/wayland-crosshair)
 
 A minimal crosshair overlay for Wayland compositors (Hyprland, Sway, etc.).
 
-Displays a small green dot at the exact center of your screen as a fullscreen transparent overlay. Designed for gaming — it is completely invisible to the input system: no focus, no keyboard grabs, no mouse interception. Clicks and cursor movement pass straight through to the game underneath.
+Displays a dot at the center of your screen (or anywhere else) as a fullscreen transparent overlay. Designed for gaming — it is completely invisible to the input system: no focus, no keyboard grabs, no mouse interception. Clicks and cursor movement pass straight through to the game underneath.
 
 ## Features
 
