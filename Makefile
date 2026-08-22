@@ -7,4 +7,4 @@ crosshair: src/crosshair.c
 	$(CC) -o crosshair src/crosshair.c $(CFLAGS) $(LIBS)
 
 clean:
-	rm -f out
+	rm -f crosshair
