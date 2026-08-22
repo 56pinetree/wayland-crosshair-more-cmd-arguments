@@ -61,7 +61,7 @@ Kill it with:
 pkill crosshair
 ```
 
-System tray icon:
+Setting the system tray icon: 
 The icon must be named "crosshair-icon.png" and placed alongside the binary for it to show.
 
 Or click the entry on the system tray and quit.
