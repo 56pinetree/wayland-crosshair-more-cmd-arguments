@@ -5,32 +5,18 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-
-// Tray
-#if defined (__linux__) || defined (linux) || defined (__linux)
-#define TRAY_APPINDICATOR 1
-#endif
-
 #include "tray/tray_linux.c"
 
-#if TRAY_APPINDICATOR
-#define TRAY_ICON1 "indicator-messages-new"
-#define TRAY_ICON2 "indicator-messages-new"
-#endif
+#define ICON_FILENAME "src/crosshair-icon.png"
 
-static struct tray tray;
+struct tray tray;
 static void quit_cb(struct tray_menu *item) {
     (void)item;
     g_application_quit(G_APPLICATION(g_application_get_default()));
+    tray_exit();
 }
 
-static struct tray tray = {
-    .icon = TRAY_ICON1,
-    .menu =
-        (struct tray_menu[]) {
-            {.text = "Quit", .cb = quit_cb},
-            {.text = NULL}},
-};
+char icon_path[PATH_MAX];
 
 double height = 0.5;
 double width = 0.5;
@@ -39,6 +25,38 @@ double radius = 2.0;
 double r = 0.0;
 double g = 0.6;
 double b = 0.9;
+
+void set_icon_path() {
+    char exe_path[PATH_MAX];
+    ssize_t len;
+    len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
+    if (len == -1) {
+        perror("readlink failed");
+        //return EXIT_FAILURE;
+    }
+
+    // Remove the name of the binary leaving just the directory
+    int offset = 0;
+    int total_offset = 0;
+    for(int i = 0; i < len; i++) {
+	total_offset++;
+	if(exe_path[i] == '/')
+	    offset = total_offset;
+    }
+    len = offset;
+
+    // Append ICON_FILENAME to the path
+    exe_path[len-1] = '/';
+    int lo = sizeof(ICON_FILENAME);
+    len += lo;
+    for(int i = len-lo; i <= len; i++) {
+	exe_path[i] = ICON_FILENAME[lo - (len - i)];
+    }
+    exe_path[len] = '\0';
+
+    for(int i = 0; i < PATH_MAX; i++)
+	icon_path[i] = exe_path[i];
+}
 
 static gboolean on_draw(GtkWidget *w, cairo_t *cr, gpointer _) {
     (void)_;
@@ -84,8 +102,15 @@ static void activate(GtkApplication *app, gpointer _) {
 
     cairo_region_t *empty = cairo_region_create();
     gdk_window_input_shape_combine_region(gtk_widget_get_window(win), empty, 0, 0);
-    cairo_region_destroy(empty);
 
+    set_icon_path();
+    struct tray tray = {
+	.icon = icon_path,
+	.menu =
+	    (struct tray_menu[]) {
+		{.text = "Quit", .cb = quit_cb},
+		{.text = NULL}},
+    };
     if (tray_init(&tray) < 0) {
 	printf("failed to create tray\n");
 	return;
@@ -122,7 +147,6 @@ int main(int argc, char *argv[]) {
         printf("\nNote: all arguments must be between 0.0 and 1.0\n");
         return 0;
     }
-
     if(argc > 1) {
         for(int i = 0; i < argc; i++) {
             if(argv[i][0] == 'x') continue;
