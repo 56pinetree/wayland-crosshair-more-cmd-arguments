@@ -17,6 +17,7 @@ Displays a dot at the center of your screen (or anywhere else) as a fullscreen t
 
 - `gtk3`
 - `gtk-layer-shell`
+- `libappindicator3`
 
 Install on Arch Linux:
 
