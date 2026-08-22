@@ -62,9 +62,7 @@ pkill crosshair
 ```
 Or click the entry on the system tray and quit.
 
-
 Setting the system tray icon: 
-
 The icon must be named "crosshair-icon.png" and placed alongside the binary for it to show.
 
 ## Why not a Python/Electron/etc. script?
