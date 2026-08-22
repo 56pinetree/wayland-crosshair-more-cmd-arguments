@@ -7,7 +7,7 @@
 #include <string.h>
 #include "tray/tray_linux.c"
 
-#define ICON_FILENAME "src/crosshair-icon.png"
+#define ICON_FILENAME "crosshair-icon.png"
 
 struct tray tray;
 static void quit_cb(struct tray_menu *item) {
