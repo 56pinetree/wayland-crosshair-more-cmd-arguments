@@ -11,7 +11,6 @@ Displays a small green dot at the exact center of your screen as a fullscreen tr
 - True screen center — anchors to all four edges so the dot is always at exact pixel center regardless of resolution
 - Negligible resource usage — static surface, redrawn once at startup
 - System tray entry to close the program (via https://github.com/nschmidtdev/c_tray)
-(Icon currently does not show)
 
 ## Dependencies
 
@@ -62,7 +61,12 @@ Kill it with:
 pkill crosshair
 ```
 
-Or right click the entry on the system tray and quit.
+System tray icon:
+The icon must be named "crosshair-icon.png" and placed alongside the binary for it to show.
+
+Or click the entry on the system tray and quit.
+
+
 
 ## Why not a Python/Electron/etc. script?
 
