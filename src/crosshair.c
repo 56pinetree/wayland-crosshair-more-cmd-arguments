@@ -9,11 +9,13 @@
 
 #define ICON_FILENAME "crosshair-icon.png"
 
+GtkApplication *app;
+
 struct tray tray;
 static void quit_cb(struct tray_menu *item) {
     (void)item;
-    g_application_quit(G_APPLICATION(g_application_get_default()));
     tray_exit();
+    g_application_quit(G_APPLICATION(app));
 }
 
 char icon_path[PATH_MAX];
@@ -103,14 +105,6 @@ static void activate(GtkApplication *app, gpointer _) {
     cairo_region_t *empty = cairo_region_create();
     gdk_window_input_shape_combine_region(gtk_widget_get_window(win), empty, 0, 0);
 
-    set_icon_path();
-    struct tray tray = {
-	.icon = icon_path,
-	.menu =
-	    (struct tray_menu[]) {
-		{.text = "Quit", .cb = quit_cb},
-		{.text = NULL}},
-    };
     if (tray_init(&tray) < 0) {
 	printf("failed to create tray\n");
 	return;
@@ -140,6 +134,7 @@ void set_value(int index, double value) {
     }
 }
 
+
 int main(int argc, char *argv[]) {
     if(argc == 2 && argv[1][0] == '-') {
         printf("usage: crosshair [height] [width] [radius] [r] [g] [b]\n");
@@ -154,7 +149,16 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    GtkApplication *app = gtk_application_new("se.n1k0.crosshair", G_APPLICATION_DEFAULT_FLAGS);
+    set_icon_path();
+    tray = (struct tray) {
+	.icon = icon_path,
+	.menu =
+	    (struct tray_menu[]) {
+		{.text = "Quit", .cb = quit_cb},
+		{.text = NULL}},
+    };
+
+    app = gtk_application_new("se.n1k0.crosshair", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
     int status = g_application_run(G_APPLICATION(app), 0, NULL);
     g_object_unref(app);
